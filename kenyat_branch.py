@@ -20,13 +20,13 @@ def payment_info():
 
     if payment_type.lower() == 'cash':
         cash_amount = float(input("Enter cash amount: $"))
-        # Checks to see if amount paid is over or under the item price
-        # if item_price < cash_amount:
-        #     change = cash_amount - item_price
-        #     print(f"Your change: ${change}")
-        # elif item_price > cash_amount:
-        #     print("Insufficient funds, please try again.")
-        #     payment_type = input("Cash, Credit, or Check? ")
+        Checks to see if amount paid is over or under the item price
+        if item_price < cash_amount:
+            change = cash_amount - item_price
+            print(f"Your change: ${change}")
+        elif item_price > cash_amount:
+            print("Insufficient funds, please try again.")
+            payment_type = input("Cash, Credit, or Check? ")
     elif payment_type.lower() == 'credit':
         card_number = int(input("Enter card number: "))
         expiration = int(input("Enter expiration date: "))
