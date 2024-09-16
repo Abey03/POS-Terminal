@@ -1,6 +1,8 @@
+
 # Variables
 # display_again = input("Redisplay menu? (y/n) ")
 # main_menu = input("Return to main menu? (y/n)")
+# Needs to be product price
 item_price = 150
 
 # Prompts the user to redisplay menu and complete purchase
