@@ -14,41 +14,6 @@ def display_menu(products):
     for idx, product in enumerate(products):
         print(f"{idx + 1}. {product.name} - ${product.price:.2f}")
 
-def payment_info():
-    payment_type = input(
-        "How would you like to pay?\nEnter 'Cash', 'Credit', 'Check', or 'Return' to return to menu: ")
-
-    if payment_type.lower() == 'cash':
-        cash_amount = float(input("Enter cash amount: $"))
-        Checks to see if amount paid is over or under the item price
-        if item_price < cash_amount:
-            change = cash_amount - item_price
-            print(f"Your change: ${change}")
-        elif item_price > cash_amount:
-            print("Insufficient funds, please try again.")
-            payment_type = input("Cash, Credit, or Check? ")
-    elif payment_type.lower() == 'credit':
-        card_number = int(input("Enter card number: "))
-        expiration = int(input("Enter expiration date: "))
-        cvv = int(input("Enter CVV: "))
-    elif payment_type.lower() == 'check':
-        check_number = int(input("Enter check number"))
-    elif payment_type.lower() == 'return':
-        main()
-
-    redisplay = input("Return to menu? (y/n): ")
-    if "y" in redisplay:
-        main()
-    elif "n" in redisplay:
-        print("Subtotal: ")
-        print("Payment info: ")
-        if "cash" in payment_type:
-            print(f"Cash: ${cash_amount}")
-        elif "credit" in payment_type:
-            print(f"Credit: {card_number}")
-        elif "check" in payment_type:
-            print(f"Check: {check_number}")
-
 def main():
     # Create a list of Product instances
     products = [
@@ -69,26 +34,61 @@ def main():
     # Display the menu
     display_menu(products)
 
-    choice = input("\nEnter the number of the item you want to buy, or type 'exit' to quit: ").strip()
+    while True:
+        choice = input("\nEnter the number of the item you want to buy, or type 'exit' to quit: ").strip()
 
-    if choice.lower() == 'exit':
-        print("Thank you for visiting the Candy Store!")
+        if choice.lower() == 'exit':
+            print("Thank you for visiting the Candy Store!")
 
-    try:
-        item_number = int(choice)
-        selected_items = []
-        if 1 <= item_number <= len(products):
-            selected_product = products[item_number - 1]
-            selected_items.append(selected_product)
-            print(selected_items)
-            print(f"\nYou have selected:\n{selected_product}")
-            # --------BREAK---------
-            payment_info()
-            # --------BREAK---------
-        else:
-            print("Invalid number. Please select a number from the menu.")
-    except ValueError:
-        print("Invalid input. Please enter a number or 'exit'.")
+        try:
+            item_number = int(choice)
+            selected_items = []
+            if 1 <= item_number <= len(products):
+                selected_product = products[item_number - 1]
+                selected_items.append(selected_product.name)
+                selected_items.append(selected_product.price)
+                print(f"\nYou have selected:\n{selected_product}")
+                payment_type = input(
+                    "How would you like to pay?\nEnter 'Cash', 'Credit', 'Check', or 'Return' to return to menu: ")
+
+                # Sales tax and grand total variables
+                sales_tax = selected_product.price * 0.06
+                grand_total = round(sales_tax + selected_product.price, 2)
+
+                if payment_type.lower() == 'cash':
+                    cash_amount = float(input("Enter cash amount: $"))
+                    # Checks to see if amount paid is over or under the item price to provide change
+                    if grand_total < cash_amount:
+                        change = cash_amount - grand_total
+                        print(f"Your change: ${change}")
+                    elif grand_total > cash_amount:
+                        print("Insufficient funds, please try again.")
+                        payment_type = input("Cash, Credit, or Check? ")
+                elif payment_type.lower() == 'credit':
+                    card_number = int(input("Enter card number: "))
+                    expiration = int(input("Enter expiration date: "))
+                    cvv = int(input("Enter CVV: "))
+                elif payment_type.lower() == 'check':
+                    check_number = int(input("Enter check number"))
+                elif payment_type.lower() == 'return':
+                    main()
+                # Prompts the user to return to menu or checkout
+                redisplay = input("Return to menu? (y/n): ")
+                if "y" in redisplay:
+                    continue
+                elif "n" in redisplay:
+                    print(
+                        f"Items selected:\n{selected_items}\nSubtotal: ${selected_product.price}\n+ {round(sales_tax, 2)}(6% tax)\nGrand Total: {grand_total}\nPayment info")
+                    if "cash" in payment_type:
+                        print(f"Cash: ${cash_amount}\nChange: ${change}")
+                    elif "credit" in payment_type:
+                        print(f"Paid with card: {card_number}")
+                    elif "check" in payment_type:
+                        print(f"Paid with check: {check_number}")
+            else:
+                print("Invalid number. Please select a number from the menu.")
+        except ValueError:
+            print("Invalid input. Please enter a number or 'exit'.")
 
 if __name__ == "__main__":
     main()
